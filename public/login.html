@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cyber Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <video autoplay muted loop id="bg-video">
+    <source src="background.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+  </video>
+  <div class="overlay"></div>
+  <div class="form-wrapper animate-fade">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <div class="form-control">
+        <input type="text" id="username" name="username" required />
+        <label>Username</label>
+      </div>
+      <div class="form-control">
+        <input type="password" id="password" name="password" required />
+        <label>Password</label>
+      </div>
+      <button type="submit">Sign In</button>
+    </form>
+    <p>New to Cyber? <a href="register.html">Register now</a></p>
+  </div>
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+      if (data.success) {
+        alert("Login successful!");
+        window.location.href = "https://example.com";  // Redirect to the desired page
+      } else {
+        alert(data.message);
+      }
+    });
+  </script>
+</body>
+</html>
