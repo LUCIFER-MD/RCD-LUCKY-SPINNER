@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="admin-panel">
+        <h2>Admin Panel</h2>
+        <div id="user-list"></div>
+        <button id="create-user-btn">Create New User</button>
+    </div>
+
+    <script>
+        const userList = document.getElementById('user-list');
+        const createUserBtn = document.getElementById('create-user-btn');
+
+        // Fetch users
+        fetch('/admin/users', {
+            headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                data.users.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.innerHTML = `
+                        <p>${user.email} - ${user.role}</p>
+                        <button onclick="editUser('${user._id}')">Edit</button>
+                        <button onclick="deleteUser('${user._id}')">Delete</button>
+                        <button onclick="promoteUser('${user._id}')">Promote to Admin</button>
+                        <button onclick="demoteUser('${user._id}')">Demote to User</button>
+                    `;
+                    userList.appendChild(userDiv);
+                });
+            }
+        });
+
+        // Example functions for creating, deleting, and promoting users
+        function editUser(userId) { console.log(`Editing user ${userId}`); }
+        function deleteUser(userId) { console.log(`Deleting user ${userId}`); }
+        function promoteUser(userId) { console.log(`Promoting user ${userId}`); }
+        function demoteUser(userId) { console.log(`Demoting user ${userId}`); }
+    </script>
+</body>
+</html>
